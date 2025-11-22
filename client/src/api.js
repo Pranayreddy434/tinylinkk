@@ -1,6 +1,6 @@
 // client/src/api.js
 
-const API_BASE = ''; // same origin; Vite dev proxies /api, /healthz
+const API_BASE = import.meta.env.VITE_API_BASE || ''; // same origin; Vite dev proxies /api, /healthz
 
 export async function fetchLinks() {
   const res = await fetch(`${API_BASE}/api/links`);

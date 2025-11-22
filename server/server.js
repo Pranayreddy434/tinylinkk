@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 import pool from './db.js';
@@ -195,13 +196,19 @@ app.delete('/api/links/:code', async (req, res) => {
   }
 });
 
-// ---- Static Frontend (React build) ----
+// ---- Static Frontend (React/Vite build) ----
 
-const clientDistPath = path.join(__dirname, 'client', 'dist');
+// IMPORTANT: client is a sibling of server, so go one level up
+const clientDistPath = path.resolve(__dirname, '..', 'client', 'dist');
+console.log('Serving static files from:', clientDistPath);
+
+if (!fs.existsSync(clientDistPath)) {
+  console.warn('WARNING: client/dist does not exist. Did you run "npm run build" in client?');
+}
 
 app.use(express.static(clientDistPath));
 
-// Serve index.html for dashboard and stats page
+// Serve index.html for dashboard and stats SPA routes
 app.get('/', (req, res) => {
   res.sendFile(path.join(clientDistPath, 'index.html'));
 });
