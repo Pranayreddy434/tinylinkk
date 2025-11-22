@@ -36,12 +36,13 @@ export default function Dashboard() {
   }
 
   function handleCreated(newLink) {
-    setLinks((prev) => [{ 
+    setLinks((prev) => [{
       code: newLink.code,
       url: newLink.url,
       total_clicks: newLink.total_clicks,
       last_clicked: newLink.last_clicked,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(), // or you can add created_at in POST response later
+      shortUrl: newLink.shortUrl,           // ✅ IMPORTANT
     }, ...prev]);
   }
 
@@ -90,7 +91,7 @@ export default function Dashboard() {
         )}
       </div>
 
-      <style >{`
+      <style>{`
         .dashboard-container {
           min-height: 100vh;
           position: relative;

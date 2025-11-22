@@ -1,4 +1,4 @@
-
+// client/src/pages/StatsPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { fetchLinkStats } from '../api';
@@ -40,9 +40,6 @@ export default function StatsPage() {
       mounted = false;
     };
   }, [code]);
-
-  const baseUrl = window.location.origin;
-  const shortUrl = `${baseUrl}/${code}`;
 
   function formatDate(value) {
     if (!value) return '—';
@@ -100,6 +97,9 @@ export default function StatsPage() {
       </div>
     );
   }
+
+  // ✅ Use backend shortUrl; fallback just in case
+  const shortUrl = stats?.shortUrl || `${window.location.origin}/${code}`;
 
   return (
     <div className="stats-container">
@@ -168,7 +168,8 @@ export default function StatsPage() {
 
         <div className="target-url-section">
           <h3 className="section-title">Target URL</h3>
-          <a href={shortUrl} target="_blank" rel="noreferrer" className="target-url">
+          {/* You can use stats.url here or shortUrl; stats.url shows destination */}
+          <a href={stats.url} target="_blank" rel="noreferrer" className="target-url">
             {stats.url}
           </a>
         </div>

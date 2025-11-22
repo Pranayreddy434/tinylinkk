@@ -124,7 +124,7 @@ app.post('/api/links', async (req, res) => {
   }
 });
 
-// GET /api/links — List all links
+// GET /api/links — List all links (NOW includes shortUrl)
 app.get('/api/links', async (req, res) => {
   try {
     const [rows] = await pool.query(
@@ -133,9 +133,11 @@ app.get('/api/links', async (req, res) => {
          target_url AS url, 
          total_clicks, 
          last_clicked, 
-         created_at 
+         created_at,
+         CONCAT(?, '/', code) AS shortUrl
        FROM links
-       ORDER BY created_at DESC`
+       ORDER BY created_at DESC`,
+      [BASE_URL]
     );
     res.json(rows);
   } catch (err) {
@@ -144,7 +146,7 @@ app.get('/api/links', async (req, res) => {
   }
 });
 
-// GET /api/links/:code — Stats for one code
+// GET /api/links/:code — Stats for one code (NOW includes shortUrl)
 app.get('/api/links/:code', async (req, res) => {
   try {
     const { code } = req.params;
@@ -154,10 +156,11 @@ app.get('/api/links/:code', async (req, res) => {
          target_url AS url, 
          total_clicks, 
          last_clicked, 
-         created_at 
+         created_at,
+         CONCAT(?, '/', code) AS shortUrl
        FROM links
        WHERE code = ?`,
-      [code]
+      [BASE_URL, code]
     );
 
     if (rows.length === 0) {
@@ -260,5 +263,5 @@ app.get('/:code', async (req, res) => {
 // ---- Start server ----
 
 app.listen(PORT, () => {
-  console.log(`TinyLink server running at http://localhost:${PORT}`);
+  console.log(`TinyLink server running at ${BASE_URL}`);
 });

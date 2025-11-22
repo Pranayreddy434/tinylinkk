@@ -1,4 +1,4 @@
-
+// client/src/components/LinksTable.jsx
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -90,8 +90,6 @@ export default function LinksTable({ links, onDelete }) {
       }
     }
   }
-
-  const baseUrl = window.location.origin;
 
   return (
     <div className="advanced-card">
@@ -235,7 +233,8 @@ export default function LinksTable({ links, onDelete }) {
             </thead>
             <tbody>
               {filtered.map((link, index) => {
-                const shortUrl = `${baseUrl}/${link.code}`;
+                // ✅ Use backend shortUrl; fallback just in case
+                const shortUrl = link.shortUrl || `${window.location.origin}/${link.code}`;
                 const isSelected = selectedRows.has(link.code);
                 
                 return (
